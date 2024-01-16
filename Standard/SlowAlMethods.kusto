@@ -1,0 +1,17 @@
+AppTraces
+| where TimeGenerated > ago(1d) | where Properties.aadTenantId == "%1" | where Properties.environmentName == "%2"
+and Properties.eventId == 'RT0018'
+| extend aadTenantId = tostring( Properties.aadTenantId )
+, environmentName = Properties.environmentName
+, environmentType = Properties.environmentType
+, alMethod = tostring( Properties.alMethod )
+, alObjectId = toint( Properties.alObjectId )
+, alObjectName = tostring( Properties.alObjectName )
+, alObjectType = tostring(Properties.alObjectType)
+, executionTime = Properties.executionTime
+, executionTimeInMS = toreal(totimespan(Properties.executionTime))/10000 //the datatype for executionTime is timespan 
+, extensionName = tostring( Properties.extensionName )
+| extend executionTimeInSec = executionTimeInMS / 1000
+| summarize count(), dcount( aadTenantId ), sum( executionTimeInSec ), avg( executionTimeInSec ) by alMethod, alObjectType, alObjectName, extensionName
+| order by avg_executionTimeInSec desc 
+| limit 20

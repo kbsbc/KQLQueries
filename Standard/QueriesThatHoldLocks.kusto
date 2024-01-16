@@ -1,0 +1,22 @@
+AppTraces
+| where timestamp > ago(1d) | where Properties.aadTenantId == "%1" | where Properties.environmentName == "%2"
+    and Properties.eventId == 'RT0005'
+| where Properties.sqlStatement has 'UPDLOCK'
+| project eventId = Properties.eventId 
+, aadTenantId = Properties.aadTenantId
+, sqlStatement = tostring(Properties.sqlStatement)
+, environmentName = Properties.environmentName
+, environmentType = Properties.environmentType
+, companyName = Properties.companyName
+, extensionId = Properties.extensionId
+, extensionPublisher = Properties.extensionPublisher
+, extensionName = Properties.extensionName
+, extensionVersion = Properties.extensionVersion
+, alObjectId = Properties.alObjectId
+, alObjectName = Properties.alObjectName
+, alObjectType = Properties.alObjectType
+, alStackTrace = Properties.alStackTrace
+, clientType = Properties.clientType
+, executionTime = Properties.executionTime
+, executionTimeInMS = toreal(totimespan(Properties.executionTime))/10000 //the datatype for executionTime is timespan 
+| take 1
