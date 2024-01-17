@@ -1,0 +1,19 @@
+AppTraces
+| order by TimeGenerated | where TimeGenerated > ago(7d) | where Properties.aadTenantId == "%1" | where Properties.environmentName == "%2"
+| where Properties has 'CL0002'
+| where Properties.eventId == 'CL0002'
+| where Properties.userFeedback in ('Yes', 'No')
+| extend AadTenantId = tostring( Properties.aadTenantId )
+, EnvironmentName = tostring( Properties.environmentName )
+| project TimeGenerated
+, AadTenantId, EnvironmentName
+, ClientType = tostring( Properties.clientType )
+, ErrorMessage = tostring( Properties.errorMessage )
+, ExtensionId = tostring( Properties.appId )
+, ExtensionName = tostring( Properties.appName )
+, ExtensionVersion = tostring( Properties.appVersion )
+, ExtensionPublisher = tostring( Properties.appPublisher )
+, StackTrace = Properties.alStackTrace
+, HostType = Properties.hostType
+, UserFeedback = Properties.userFeedback
+, UserLocale = Properties.userLocale

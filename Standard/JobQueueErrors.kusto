@@ -1,0 +1,46 @@
+let job_queue_errors = 
+AppTraces
+| where TimeGenerated >= ago(30d) | where Properties.aadTenantId == "%1" | where Properties.environmentName == "%2"
+| where Properties.eventId == 'AL0000HE7'
+| where Properties has 'AL0000HE7' // for performance
+| where isnotempty(Properties.aadTenantId) // filter away signal from Docker sandboxes
+| extend 
+  AadTenantId = tostring( Properties.aadTenantId )
+, CompanyName = tostring( Properties.companyName )  
+, EnvironmentName = tostring( Properties.environmentName )
+, EnvironmentType = tostring( Properties.environmentType )
+, ObjectId = toint(Properties.alJobQueueObjectId)
+| extend TenantId = strcat( toupper(AadTenantId), toupper(EnvironmentName) )
+| project TimeGenerated
+, AadTenantId, EnvironmentName, CompanyName, EnvironmentType, TenantId
+, PlatformVersion = tostring( Properties.componentVersion )
+, ObjectId
+, ObjectType = Properties.alJobQueueObjectType
+, ObjectName = Properties.alJobQueueObjectName // added in 22.0 
+, ObjectDescription = Properties.alJobQueueObjectDescription // added in 22.2
+, CodeOwnershipKey = case(
+      ObjectId between (50000 .. 99999), 'ENVIRONMENT'
+    , ObjectId between (1000000 .. 69999999), 'ISV_ONPREM'
+    , ObjectId between (70000000 .. 74999999), 'ISV_ONLINE'
+    , 'MICROSOFT'
+)
+, TaskId = tostring( Properties.alJobQueueScheduledTaskId )
+, ALStacktrace = Properties.alJobQueueStacktrace
+;
+let task_scheduler_errors = 
+AppTraces
+| where TimeGenerated >= ago(30d) | where Properties.aadTenantId == "%1" | where Properties.environmentName == "%2"
+| where Properties.eventId == 'LC0045'
+| project TaskId = tostring( Properties.taskId )
+, exception = Properties.failureReason
+, retryMessage = tostring( Properties.retryMessage )
+| extend exceptionIsRetriable = case (
+    retryMessage has 'Exception is not retriable', false
+  , retryMessage has 'Exception is retriable', true
+  , false
+)
+| project-away retryMessage 
+;
+job_queue_errors
+| join kind=leftouter task_scheduler_errors on $left.TaskId == $right.TaskId
+| project-away TaskId, TaskId1

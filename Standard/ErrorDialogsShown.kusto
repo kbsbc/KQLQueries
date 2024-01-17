@@ -1,0 +1,29 @@
+AppTraces
+| order by TimeGenerated | where TimeGenerated > ago(7d) | where Properties.aadTenantId == "%1" | where Properties.environmentName == "%2"
+| where Properties.eventId == 'RT0030'
+| project TimeGenerated
+// in which environment/company did it happen
+, aadTenantId = Properties.aadTenantId
+, environmentName = Properties.environmentName
+, environmentType = Properties.environmentType
+, companyName = Properties.companyName
+// in which extension/app
+, extensionId = Properties.extensionId
+, extensionName = Properties.extensionName
+, extensionVersion = Properties.extensionVersion
+, extensionPublisher = Properties.extensionPublisher
+// in which object
+, alObjectId = Properties.alObjectId
+, alObjectName = Properties.alObjectName
+, alObjectType = Properties.alObjectType
+// which user got the error
+, usertelemetryId = case(
+  toint( substring(Properties.componentVersion,0,2)) >= 20, user_Id // user telemetry id was introduced in the platform in version 20.0
+, 'N/A'
+)
+// error information
+, clientType = Properties.clientType
+, errorMessageInUsersLanguage = Properties.alErrorMessage
+, errorMessageInEnglish = Properties.alEnglishLanguageDiagnosticsMessage // This dimension was introduced in Business Central 2023 release wave 1, version 21.4.
+, alStackTrace = Properties.alStackTrace
+, failureReason = Properties.failureReason
