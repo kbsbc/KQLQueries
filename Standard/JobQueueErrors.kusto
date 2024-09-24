@@ -1,6 +1,6 @@
 let job_queue_errors = 
 AppTraces
-| where TimeGenerated >= ago(30d) | where Properties.aadTenantId == "%1" | where Properties.environmentName == "%2"
+| where TimeGenerated >= ago($Time) | where Properties.aadTenantId == "%1" | where Properties.environmentName == "%2"
 | where Properties.eventId == 'AL0000HE7'
 | where Properties has 'AL0000HE7' // for performance
 | where isnotempty(Properties.aadTenantId) // filter away signal from Docker sandboxes

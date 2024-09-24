@@ -1,5 +1,5 @@
 AppTraces
-| order by TimeGenerated | where TimeGenerated > ago(7d) | where Properties.aadTenantId == "%1" | where Properties.environmentName == "%2"
+| order by TimeGenerated | where TimeGenerated > ago($Time) | where Properties.aadTenantId == "%1" | where Properties.environmentName == "%2"
 | where Properties.eventId == 'RT0030'
 | project TimeGenerated
 // in which environment/company did it happen
@@ -18,7 +18,7 @@ AppTraces
 , alObjectType = Properties.alObjectType
 // which user got the error
 , usertelemetryId = case(
-  toint( substring(Properties.componentVersion,0,2)) >= 20, user_Id // user telemetry id was introduced in the platform in version 20.0
+  toint( substring(Properties.componentVersion,0,2)) >= 20, userId // user telemetry id was introduced in the platform in version 20.0
 , 'N/A'
 )
 // error information

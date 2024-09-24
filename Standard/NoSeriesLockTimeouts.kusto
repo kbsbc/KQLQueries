@@ -1,5 +1,5 @@
 AppTraces
-| where TimeGenerated > ago(1d) | where Properties.aadTenantId == "%1" | where Properties.environmentName == "%2"
+| where TimeGenerated > ago($Time) | where Properties.aadTenantId == "%1" | where Properties.environmentName == "%2"
 and Properties.eventId == 'RT0012'
 | project
   componentVersion = Properties.componentVersion

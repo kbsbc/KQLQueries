@@ -1,5 +1,5 @@
 AppTraces
-| order by TimeGenerated | where TimeGenerated > ago(7d) | where Properties.aadTenantId == "%1" | where Properties.environmentName == "%2"
+| order by TimeGenerated | where TimeGenerated > ago($Time) | where Properties.aadTenantId == "%1" | where Properties.environmentName == "%2"
 | where Properties has 'CL0002'
 | where Properties.eventId == 'CL0002'
 | where Properties.userFeedback in ('Yes', 'No')

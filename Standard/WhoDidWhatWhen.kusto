@@ -1,9 +1,9 @@
-let _timestamp = todatetime('%3'); // adjust as needed
+let _timestamp = todatetime('$Time'); // adjust as needed
 let _interval_hours = 1; // adjust as needed
 let _start_date = datetime_add('hour', -_interval_hours, _timestamp);
 let _end_date = datetime_add('hour', _interval_hours, _timestamp);
 AppTraces
-| where TimeGenerated between (_start_date .. _end_date) | where Properties.aadTenantId == "%1" | where Properties.environmentName == "%2"
+| where TimeGenerated between (_start_date .. _end_date) 
 | project TimeGenerated, session_Id, message
 | order by session_Id, TimeGenerated
 | evaluate pivot(session_Id)
