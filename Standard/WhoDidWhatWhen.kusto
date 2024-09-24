@@ -4,6 +4,6 @@ let _start_date = datetime_add('hour', -_interval_hours, _timestamp);
 let _end_date = datetime_add('hour', _interval_hours, _timestamp);
 AppTraces
 | where TimeGenerated between (_start_date .. _end_date) 
-| project TimeGenerated, session_Id, message
+| project TimeGenerated, SessionId, Message
 | order by SessionId, TimeGenerated
-| evaluate pivot(session_Id)
+| evaluate pivot(SessionId)

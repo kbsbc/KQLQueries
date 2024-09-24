@@ -5,5 +5,5 @@ AppTraces
 , alObjectId = Properties.alObjectId
 , alObjectName = Properties.alObjectName
 , alObjectType = Properties.alObjectType
-| project TimeGenerated, eventId, operationId, message, alObjectId, alObjectName, alObjectType, Properties
+| project TimeGenerated, eventId, operationId, Message, alObjectId, alObjectName, alObjectType, Properties
 | order by TimeGenerated asc

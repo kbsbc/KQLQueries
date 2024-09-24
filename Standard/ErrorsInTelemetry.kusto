@@ -31,4 +31,4 @@ AppTraces
   // user telemetry id was introduced in the platform in version 20.0
   toint( substring(Properties.componentVersion,0,2)) >= 20, UserId
 , 'N/A'
-), message
+), Message
