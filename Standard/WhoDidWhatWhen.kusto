@@ -5,5 +5,5 @@ let _end_date = datetime_add('hour', _interval_hours, _timestamp);
 AppTraces
 | where TimeGenerated between (_start_date .. _end_date) 
 | project TimeGenerated, session_Id, message
-| order by session_Id, TimeGenerated
+| order by SessionId, TimeGenerated
 | evaluate pivot(session_Id)

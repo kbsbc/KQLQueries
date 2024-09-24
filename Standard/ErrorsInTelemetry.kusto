@@ -1,4 +1,4 @@
-traces
+AppTraces
 | order by TimeGenerated | where TimeGenerated > ago($Time) | where Properties.aadTenantId == "%1" | where Properties.environmentName == "%2"
 | where Properties.alCategory == 'FeatureTelemetry'
 | where Properties.alSubCategory == 'Error'
@@ -29,6 +29,6 @@ traces
 , alErrorText = Properties.alErrorText
 , usertelemetryId = case(
   // user telemetry id was introduced in the platform in version 20.0
-  toint( substring(Properties.componentVersion,0,2)) >= 20, userId
+  toint( substring(Properties.componentVersion,0,2)) >= 20, UserId
 , 'N/A'
 ), message

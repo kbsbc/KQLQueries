@@ -1,4 +1,4 @@
-traces
+AppTraces
 | where Properties.aadTenantId == "%1" | where Properties.environmentName == "%2"
 // | where operation_Id == '<insert session id here>' Add this in the additional filters field
 | extend eventId = Properties.eventId 

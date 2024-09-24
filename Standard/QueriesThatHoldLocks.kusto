@@ -1,5 +1,5 @@
 AppTraces
-| where timestamp > ago($Time) | where Properties.aadTenantId == "%1" | where Properties.environmentName == "%2"
+| where TimeGenerated > ago($Time) | where Properties.aadTenantId == "%1" | where Properties.environmentName == "%2"
     and Properties.eventId == 'RT0005'
 | where Properties.sqlStatement has 'UPDLOCK'
 | project eventId = Properties.eventId 
